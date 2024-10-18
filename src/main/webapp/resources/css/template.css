@@ -1,0 +1,19 @@
+html, body{
+    height: 100%;
+}
+
+.main-view{
+    height: 100%;
+}
+
+.header{
+    height: 10%;
+}
+
+.body{
+    height: 80%;
+}
+
+.footer{
+    height: 10%;
+}
