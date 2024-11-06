@@ -4,15 +4,20 @@
 
 <div class="login row position-absolute top-50 start-50 translate-middle" style="width: 500px">
 	<div class="col-md-6 offset-md-3">
-        <form:form method="POST" action="admin/account/login" modelAttribute="account">
+        <form:form method="POST" action="admin/account/change-password" modelAttribute="account">
             <div>
                 <form:input type="hidden" class="form-control" path="id" />
+                <form:input type="hidden" class="form-control" path="userName" />
             </div>
             <div>
-                <form:input type="text" class="form-control"
-                placeholder="Tên tài khoản"
+                <form:input type="password" class="form-control"
+                placeholder="Mật khẩu"
                 autocomplete="off"
-                path="userName" />
+                path="password" />
+                <form:input type="password" class="form-control" style="margin-top: 15px"
+                placeholder="Nhập lại mật khẩu"
+                autocomplete="off"
+                path="confirmPassword" />
             </div>
             <div>
                 <c:if test="${not empty accountStatus}">
@@ -20,11 +25,8 @@
                 </c:if>
             </div>
             <div style="margin-top: 15px">
-                <div class="continue">
-                    <button class="btn btn-primary">Tiếp theo</button>
-                </div>
-                <div class="forget-password">
-                    <a href="#">Quên mật khẩu</a>
+                <div class="confirm">
+                    <button class="btn btn-primary">Đồng ý</button>
                 </div>
             </div>
         </form:form>
