@@ -6,10 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
+
 @Service
 public class AccountService {
     @Autowired
     private AccountDAO accountDAO;
+    @Autowired
+    HttpSession session;
 
     public Account verifyUserName(Account account) {
         String userName = account.getUserName();
@@ -52,5 +56,26 @@ public class AccountService {
         accountAfterEncryptPassword.setPassword(hashPassword);
 
         return accountAfterEncryptPassword;
+    }
+
+    public void saveLoginSession(Account account) {
+        session.setAttribute("account_id", account.getId());
+        session.setMaxInactiveInterval(60);
+    }
+
+    public void removeLoginSession() {
+        session.removeAttribute("account_id");
+    }
+
+    public boolean checkLoginSessionExisting() {
+        return session.getAttribute("account_id") != null;
+    }
+
+    public Account getLoginInformation() {
+        int id = (int) session.getAttribute("account_id");
+
+        Account account = new Account();
+        account.setId(id);
+        return accountDAO.getInformation(account);
     }
 }

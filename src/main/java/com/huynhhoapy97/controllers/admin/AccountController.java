@@ -5,6 +5,7 @@ import com.huynhhoapy97.services.admin.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,10 +46,19 @@ public class AccountController {
         if (!isMatched) {
             proceedPasswordNotMatched(modelMap, account);
         } else {
-            proceedPasswordMatched(modelMap, account);
+            proceedPasswordMatched(account);
+
+            return "redirect:/admin/dashboard";
         }
 
         return "admin/home-page";
+    }
+
+    @GetMapping("logout")
+    public String logout() {
+        accountService.removeLoginSession();
+
+        return "redirect:/admin/home-page";
     }
 
     private void proceedAccountNotExists(ModelMap modelMap) {
@@ -91,9 +101,8 @@ public class AccountController {
         modelMap.addAttribute("account", account);
     }
 
-    private void proceedPasswordMatched(ModelMap modelMap, Account account) {
-        modelMap.addAttribute("pageName", "account/dashboard.jsp");
-        modelMap.addAttribute("account", account);
+    private void proceedPasswordMatched(Account account) {
+        accountService.saveLoginSession(account);
     }
 
     private void refreshPassword(Account account) {
