@@ -1,5 +1,7 @@
 package com.huynhhoapy97.controllers.admin;
 
+import com.huynhhoapy97.enums.ModelMapUtils;
+import com.huynhhoapy97.enums.ViewPageUtils;
 import com.huynhhoapy97.models.Account;
 import com.huynhhoapy97.services.admin.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +21,12 @@ public class TemplateController {
         boolean isExisting = accountService.checkLoginSessionExisting();
 
         if (isExisting) {
-            return "redirect:/admin/dashboard";
+            return ViewPageUtils.REDIRECT_ADMIN_DASHBOARD.getName();
         } else {
-            modelMap.addAttribute("pageName", "account/login.jsp");
-            modelMap.addAttribute("account", new Account());
+            modelMap.addAttribute(ModelMapUtils.PAGE_NAME.getName(), ViewPageUtils.ADMIN_ACCOUNT_LOGIN.getName());
+            modelMap.addAttribute(ModelMapUtils.ACCOUNT_INSTANCE.getName(), new Account());
 
-            return "admin/home-page";
+            return ViewPageUtils.ADMIN_HOMEPAGE.getName();
         }
     }
 
@@ -34,11 +36,11 @@ public class TemplateController {
 
         if (isExisting) {
             Account account = accountService.getLoginInformation();
-            modelMap.addAttribute("account", account);
+            modelMap.addAttribute(ModelMapUtils.ACCOUNT_INSTANCE.getName(), account);
 
-            return "admin/dashboard";
+            return ViewPageUtils.ADMIN_DASHBOARD.getName();
         } else {
-            return "redirect:/admin/home-page";
+            return ViewPageUtils.REDIRECT_ADMIN_HOMEPAGE.getName();
         }
     }
 }

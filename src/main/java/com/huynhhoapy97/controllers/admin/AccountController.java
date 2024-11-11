@@ -1,5 +1,9 @@
 package com.huynhhoapy97.controllers.admin;
 
+import com.huynhhoapy97.enums.ModelMapUtils;
+import com.huynhhoapy97.enums.StatusNotificationUtils;
+import com.huynhhoapy97.enums.StringUtils;
+import com.huynhhoapy97.enums.ViewPageUtils;
 import com.huynhhoapy97.models.Account;
 import com.huynhhoapy97.services.admin.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +29,7 @@ public class AccountController {
             proceedAccountExists(modelMap, account);
         }
 
-        return "admin/home-page";
+        return ViewPageUtils.ADMIN_HOMEPAGE.getName();
     }
 
     @PostMapping("change-password")
@@ -37,7 +41,7 @@ public class AccountController {
             proceedPasswordSatisfied(modelMap, account);
         }
 
-        return "admin/home-page";
+        return ViewPageUtils.ADMIN_HOMEPAGE.getName();
     }
 
     @PostMapping("login-completion")
@@ -48,57 +52,73 @@ public class AccountController {
         } else {
             proceedPasswordMatched(account);
 
-            return "redirect:/admin/dashboard";
+            return ViewPageUtils.REDIRECT_ADMIN_DASHBOARD.getName();
         }
 
-        return "admin/home-page";
+        return ViewPageUtils.ADMIN_HOMEPAGE.getName();
     }
 
     @GetMapping("logout")
     public String logout() {
         accountService.removeLoginSession();
 
-        return "redirect:/admin/home-page";
+        return ViewPageUtils.REDIRECT_ADMIN_HOMEPAGE.getName();
     }
 
     private void proceedAccountNotExists(ModelMap modelMap) {
-        modelMap.addAttribute("accountStatus", "Tên tài khoản không tồn tại");
-        modelMap.addAttribute("pageName", "account/login.jsp");
-        modelMap.addAttribute("account", new Account());
+        modelMap.addAttribute(ModelMapUtils.ACCOUNT_STATUS.getName(),
+                StatusNotificationUtils.USERNAME_IS_NOT_EXISTS.getName());
+        modelMap.addAttribute(ModelMapUtils.PAGE_NAME.getName(),
+                ViewPageUtils.ADMIN_ACCOUNT_LOGIN.getName());
+        modelMap.addAttribute(ModelMapUtils.ACCOUNT_INSTANCE.getName(),
+                new Account());
     }
 
     private void proceedAccountExists(ModelMap modelMap, Account account) {
         if (account.getPassword() == null || account.getPassword().isEmpty()) {
-            modelMap.addAttribute("pageName", "account/change-password.jsp");
-            modelMap.addAttribute("account", account);
+            modelMap.addAttribute(ModelMapUtils.PAGE_NAME.getName(),
+                    ViewPageUtils.ADMIN_ACCOUNT_CHANGE_PASSWORD.getName());
+            modelMap.addAttribute(ModelMapUtils.ACCOUNT_INSTANCE.getName(),
+                    account);
         } else {
             refreshPassword(account);
-            modelMap.addAttribute("pageName", "account/login-completion.jsp");
-            modelMap.addAttribute("account", account);
+            modelMap.addAttribute(ModelMapUtils.PAGE_NAME.getName(),
+                    ViewPageUtils.ADMIN_ACCOUNT_LOGIN_COMPLETION.getName());
+            modelMap.addAttribute(ModelMapUtils.ACCOUNT_INSTANCE.getName(),
+                    account);
         }
     }
 
     private void proceedPasswordNotSatisfied(ModelMap modelMap) {
-        modelMap.addAttribute("accountStatus", "Kiểm tra lại thông tin mật khẩu");
-        modelMap.addAttribute("pageName", "account/change-password.jsp");
+        modelMap.addAttribute(ModelMapUtils.ACCOUNT_STATUS.getName(),
+                StatusNotificationUtils.PASSWORD_CHECK.getName());
+        modelMap.addAttribute(ModelMapUtils.PAGE_NAME.getName(),
+                ViewPageUtils.ADMIN_ACCOUNT_CHANGE_PASSWORD.getName());
     }
 
     private void proceedPasswordSatisfied(ModelMap modelMap, Account account) {
         boolean isSuccess = accountService.updatePassword(account);
 
         if (isSuccess) {
-            modelMap.addAttribute("pageName", "account/login.jsp");
-            modelMap.addAttribute("account", account);
+            modelMap.addAttribute(ModelMapUtils.PAGE_NAME.getName(),
+                    ViewPageUtils.ADMIN_ACCOUNT_LOGIN.getName());
+            modelMap.addAttribute(ModelMapUtils.ACCOUNT_INSTANCE.getName(),
+                    account);
         } else {
-            modelMap.addAttribute("accountStatus", "Có lỗi xảy ra");
-            modelMap.addAttribute("pageName", "account/change-password.jsp");
+            modelMap.addAttribute(ModelMapUtils.ACCOUNT_STATUS.getName(),
+                    StatusNotificationUtils.ERROR_WARNING.getName());
+            modelMap.addAttribute(ModelMapUtils.PAGE_NAME.getName(),
+                    ViewPageUtils.ADMIN_ACCOUNT_CHANGE_PASSWORD.getName());
         }
     }
 
     private void proceedPasswordNotMatched(ModelMap modelMap, Account account) {
-        modelMap.addAttribute("accountStatus", "Mật khẩu không chính xác");
-        modelMap.addAttribute("pageName", "account/login-completion.jsp");
-        modelMap.addAttribute("account", account);
+        modelMap.addAttribute(ModelMapUtils.ACCOUNT_STATUS.getName(),
+                StatusNotificationUtils.PASSWORD_IS_NOT_CORRECT.getName());
+        modelMap.addAttribute(ModelMapUtils.PAGE_NAME.getName(),
+                ViewPageUtils.ADMIN_ACCOUNT_LOGIN_COMPLETION.getName());
+        modelMap.addAttribute(ModelMapUtils.ACCOUNT_INSTANCE.getName(),
+                account);
     }
 
     private void proceedPasswordMatched(Account account) {
@@ -106,6 +126,6 @@ public class AccountController {
     }
 
     private void refreshPassword(Account account) {
-        account.setPassword("");
+        account.setPassword(StringUtils.EMPTY.getName());
     }
 }
