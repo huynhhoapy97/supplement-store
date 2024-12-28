@@ -7,7 +7,8 @@ public enum ViewPageUtils {
     REDIRECT_ADMIN_DASHBOARD("redirect:/admin/dashboard"),
     ADMIN_ACCOUNT_LOGIN("account/login.jsp"),
     ADMIN_ACCOUNT_CHANGE_PASSWORD("account/change-password.jsp"),
-    ADMIN_ACCOUNT_LOGIN_COMPLETION("account/login-completion.jsp");
+    ADMIN_ACCOUNT_LOGIN_COMPLETION("account/login-completion.jsp"),
+    CATEGORY_FILE_BROWSE("admin/category/file-browse");
 
     private final String name;
 

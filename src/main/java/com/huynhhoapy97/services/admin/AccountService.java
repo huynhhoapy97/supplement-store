@@ -60,7 +60,7 @@ public class AccountService {
 
     public void saveLoginSession(Account account) {
         session.setAttribute("account_id", account.getId());
-        session.setMaxInactiveInterval(60);
+        session.setMaxInactiveInterval(60*60);
     }
 
     public void removeLoginSession() {
